@@ -1,475 +1,489 @@
-<script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-
-<link rel="stylesheet" as="style" crossorigin href="[https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css](https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css)" />
-<link href="[https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap)" rel="stylesheet">
-
-<link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
-
-<style>
-    body {
-        font-family: 'Pretendard', 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-        letter-spacing: -0.02em;
-    }
-
-    @keyframes gentleFloat {
-        0% { transform: translateY(0); }
-        50% { transform: translateY(-4px); }
-        100% { transform: translateY(0); }
-    }
-    .marker-float {
-        animation: gentleFloat 2.4s ease-in-out infinite;
-    }
-
-    .custom-infowindow {
-        padding: 16px;
-        font-size: 13px;
-        border-radius: 16px;
-        background-color: rgba(255, 255, 255, 0.98);
-        box-shadow: 0 10px 30px -10px rgba(24, 24, 27, 0.15);
-        border: 1px solid rgba(228, 228, 231, 0.8);
-        backdrop-filter: blur(8px);
-    }
-
-    ::-webkit-scrollbar {
-        width: 5px;
-    }
-    ::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-        background: #e4e4e7;
-        border-radius: 9999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-        background: #d4d4d8;
-    }
-</style>
-
-<script type="text/javascript" src="[https://dapi.kakao.com/v2/maps/sdk.js?appkey=a600ea145349b868d24791c87be1fc4f&libraries=services&autoload=false](https://dapi.kakao.com/v2/maps/sdk.js?appkey=a600ea145349b868d24791c87be1fc4f&libraries=services&autoload=false)"></script>
-<header class="bg-white border-b border-zinc-100 px-6 py-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex items-center justify-between z-20 shrink-0">
-    <div class="flex items-center space-x-3">
-        <div class="w-8 h-8 rounded-lg bg-zinc-900 flex items-center justify-center">
-            <i class="fa-solid fa-compass text-white text-sm"></i>
-        </div>
-        <div>
-            <h1 class="text-lg font-bold tracking-tight text-zinc-900">ARCHIVE.CAFE</h1>
-            <p class="text-[10px] text-zinc-400 font-medium tracking-widest uppercase">Select shop & cafe directory</p>
-        </div>
-    </div>
-    <div class="flex items-center space-x-3 text-xs text-zinc-400">
-        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-zinc-100 text-zinc-600">High-school Developer Project</span>
-    </div>
-</header>
-
-<div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARCHIVE.CAFE | 감성 카페 아카이브</title>
     
-    <aside class="w-full md:w-[380px] bg-white z-10 flex flex-col border-r border-zinc-100 shrink-0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Pretendard', 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        @keyframes gentleFloat {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+            100% { transform: translateY(0); }
+        }
+        .marker-float {
+            animation: gentleFloat 2.4s ease-in-out infinite;
+        }
+
+        .custom-infowindow {
+            padding: 16px;
+            font-size: 13px;
+            border-radius: 16px;
+            background-color: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 10px 30px -10px rgba(24, 24, 27, 0.15);
+            border: 1px solid rgba(228, 228, 231, 0.8);
+            backdrop-filter: blur(8px);
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e4e4e7;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d4d4d8;
+        }
+    </style>
+
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=a600ea145349b868d24791c87be1fc4f&libraries=services&autoload=false"></script>
+</head>
+<body class="bg-[#F9F9FB] h-screen overflow-hidden flex flex-col antialiased text-zinc-800">
+
+    <header class="bg-white border-b border-zinc-100 px-6 py-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex items-center justify-between z-20 shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-zinc-900 flex items-center justify-center">
+                <i class="fa-solid fa-compass text-white text-sm"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold tracking-tight text-zinc-900">ARCHIVE.CAFE</h1>
+                <p class="text-[10px] text-zinc-400 font-medium tracking-widest uppercase">Select shop & cafe directory</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-3 text-xs text-zinc-400">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-zinc-100 text-zinc-600">High-school Developer Project</span>
+        </div>
+    </header>
+
+    <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
         
-        <div class="p-6 border-b border-zinc-100 bg-[#FCFCFD]">
-            <form id="searchForm" onsubmit="handleSearchSubmit(event)" class="space-y-4">
-                <div class="space-y-1">
-                    <label for="keywordInput" class="block text-xs font-bold uppercase tracking-wider text-zinc-400">Search Space</label>
-                    <p class="text-xs text-zinc-500">방문하고 싶은 공간이나 지역을 검색하세요.</p>
-                </div>
-                <div class="relative rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <i class="fa-solid fa-magnifying-glass text-zinc-400 text-xs"></i>
-                    </div>
-                    <input type="text" id="keywordInput" 
-                           class="focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 block w-full pl-10 pr-24 text-sm border-zinc-200 rounded-xl p-3.5 border outline-none transition-all placeholder-zinc-400 font-medium" 
-                           placeholder="예: 한남동 필터커피, 성수동">
-                    <button type="submit" 
-                            class="absolute inset-y-2 right-2 px-4 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold rounded-lg transition-all duration-200">
-                        검색
-                    </button>
-                </div>
-            </form>
+        <aside class="w-full md:w-[380px] bg-white z-10 flex flex-col border-r border-zinc-100 shrink-0">
             
-            <div class="mt-5">
-                <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-2.5">Curation Tags</p>
-                <div class="flex flex-wrap gap-1.5">
-                    <button onclick="quickSearch('에스프레소 바')" class="px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">☕ 에스프레소 바</button>
-                    <button onclick="quickSearch('필터커피')" class="px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">🧪 필터커피</button>
-                    <button onclick="quickSearch('디저트 페어링')" class="px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">🍰 디저트</button>
-                    <button onclick="quickSearch('테라스')" class="px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">🌿 테라스</button>
+            <div class="p-6 border-b border-zinc-100 bg-[#FCFCFD]">
+                <form id="searchForm" onsubmit="handleSearchSubmit(event)" class="space-y-4">
+                    <div class="space-y-1">
+                        <label for="keywordInput" class="block text-xs font-bold uppercase tracking-wider text-zinc-400">Search Space</label>
+                        <p class="text-xs text-zinc-500">방문하고 싶은 공간이나 지역을 검색하세요.</p>
+                    </div>
+                    <div class="relative rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-magnifying-glass text-zinc-400 text-xs"></i>
+                        </div>
+                        <input type="text" id="keywordInput" 
+                               class="focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 block w-full pl-10 pr-24 text-sm border-zinc-200 rounded-xl p-3.5 border outline-none transition-all placeholder-zinc-400 font-medium" 
+                               placeholder="예: 한남동 필터커피, 성수동">
+                        <button type="submit" 
+                                class="absolute inset-y-2 right-2 px-4 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold rounded-lg transition-all duration-200">
+                            검색
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="mt-5">
+                    <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-2.5">Curation Tags</p>
+                    <div class="flex flex-wrap gap-1.5">
+                        <button onclick="quickSearch('에스프레소 바')" class="px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">☕ 에스프레소 바</button>
+                        <button onclick="quickSearch('필터커피')" class="px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">🧪 필터커피</button>
+                        <button onclick="quickSearch('디저트 페어링')" class="px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">🍰 디저트</button>
+                        <button onclick="quickSearch('테라스')" class="px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">🌿 테라스</button>
+                    </div>
                 </div>
+
+                <button onclick="moveToCurrentLocation()" class="mt-4 w-full flex items-center justify-center gap-2 bg-white hover:bg-zinc-50 text-zinc-800 border border-zinc-200 rounded-xl py-3 text-xs font-bold transition-all shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+                    <i class="fa-solid fa-location-arrow text-xs text-zinc-600"></i>
+                    주변 공간 자동 탐색하기
+                </button>
             </div>
 
-            <button onclick="moveToCurrentLocation()" class="mt-4 w-full flex items-center justify-center gap-2 bg-white hover:bg-zinc-50 text-zinc-800 border border-zinc-200 rounded-xl py-3 text-xs font-bold transition-all shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-                <i class="fa-solid fa-location-arrow text-xs text-zinc-600"></i>
-                주변 공간 자동 탐색하기
-            </button>
-        </div>
-
-        <div class="flex-1 overflow-y-auto" id="resultsContainer">
-            <div id="initialState" class="p-12 text-center text-zinc-500 my-auto">
-                <div class="w-12 h-12 rounded-full bg-zinc-50 flex items-center justify-center mx-auto mb-4">
-                    <i class="fa-solid fa-store text-zinc-300 text-lg"></i>
+            <div class="flex-1 overflow-y-auto" id="resultsContainer">
+                <div id="initialState" class="p-12 text-center text-zinc-500 my-auto">
+                    <div class="w-12 h-12 rounded-full bg-zinc-50 flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-store text-zinc-300 text-lg"></i>
+                    </div>
+                    <p class="font-semibold text-zinc-700 text-sm">탐색을 시작해 보세요</p>
+                    <p class="text-xs text-zinc-400 mt-1">당신의 감성을 저격할 엄선된 공간들을 찾아 드립니다.</p>
                 </div>
-                <p class="font-semibold text-zinc-700 text-sm">탐색을 시작해 보세요</p>
-                <p class="text-xs text-zinc-400 mt-1">당신의 감성을 저격할 엄선된 공간들을 찾아 드립니다.</p>
+
+                <ul id="placesList" class="divide-y divide-zinc-100 hidden"></ul>
+            </div>
+            
+            <div id="resultsFooter" class="bg-zinc-50 border-t border-zinc-100 p-4 text-[11px] text-zinc-400 text-center font-medium hidden">
+                카드를 클릭하면 지도가 최적의 위치로 미끄러지듯 이동합니다.
+            </div>
+        </aside>
+
+        <main class="flex-1 relative">
+            <div id="kakaoMap" class="w-full h-full"></div>
+            
+            <div id="mapLoader" class="absolute inset-0 bg-white flex flex-col items-center justify-center z-30 transition-opacity duration-500">
+                <div class="w-10 h-10 border-2 border-zinc-200 border-t-zinc-800 rounded-full animate-spin mb-4"></div>
+                <p class="text-zinc-800 font-semibold text-sm">지도를 불러오고 있습니다</p>
+                <p class="text-xs text-zinc-400 mt-1">로케이션 데이터 로드 중...</p>
             </div>
 
-            <ul id="placesList" class="divide-y divide-zinc-100 hidden"></ul>
-        </div>
-        
-        <div id="resultsFooter" class="bg-zinc-50 border-t border-zinc-100 p-4 text-[11px] text-zinc-400 text-center font-medium hidden">
-            카드를 클릭하면 지도가 최적의 위치로 미끄러지듯 이동합니다.
-        </div>
-    </aside>
+            <div class="absolute top-4 right-4 bg-white/95 backdrop-blur shadow-md rounded-full px-4 py-2.5 z-10 text-xs font-semibold text-zinc-700 border border-zinc-200/80 flex items-center gap-2">
+                <span id="locationBadgeStatus" class="h-2 w-2 rounded-full bg-zinc-400"></span>
+                <span id="locationBadgeText" class="text-[11px] tracking-tight">위치 파악 대기 중</span>
+            </div>
+        </main>
+    </div>
 
-    <main class="flex-1 relative">
-        <div id="kakaoMap" class="w-full h-full"></div>
-        
-        <div id="mapLoader" class="absolute inset-0 bg-white flex flex-col items-center justify-center z-30 transition-opacity duration-500">
-            <div class="w-10 h-10 border-2 border-zinc-200 border-t-zinc-800 rounded-full animate-spin mb-4"></div>
-            <p class="text-zinc-800 font-semibold text-sm">지도를 불러오고 있습니다</p>
-            <p class="text-xs text-zinc-400 mt-1">로케이션 데이터 로드 중...</p>
-        </div>
+    <div id="toastNotification" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 bg-zinc-900 text-white px-5 py-3 rounded-xl shadow-xl z-50 flex items-center space-x-2.5 transition-all duration-300">
+        <i class="fa-solid fa-bell text-xs text-zinc-400"></i>
+        <span id="toastMessage" class="text-xs font-semibold">알림 메시지</span>
+    </div>
 
-        <div class="absolute top-4 right-4 bg-white/95 backdrop-blur shadow-md rounded-full px-4 py-2.5 z-10 text-xs font-semibold text-zinc-700 border border-zinc-200/80 flex items-center gap-2">
-            <span id="locationBadgeStatus" class="h-2 w-2 rounded-full bg-zinc-400"></span>
-            <span id="locationBadgeText" class="text-[11px] tracking-tight">위치 파악 대기 중</span>
-        </div>
-    </main>
-</div>
+    <script>
+        let mapInstance = null;
+        let placesService = null;
+        let activeInfoWindow = null;
+        let resultOverlaysArray = [];
+        let currentLocationMarker = null;
+        let currentUserCoordinates = null;
 
-<div id="toastNotification" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 bg-zinc-900 text-white px-5 py-3 rounded-xl shadow-xl z-50 flex items-center space-x-2.5 transition-all duration-300">
-    <i class="fa-solid fa-bell text-xs text-zinc-400"></i>
-    <span id="toastMessage" class="text-xs font-semibold">알림 메시지</span>
-</div>
-
-<script>
-    let mapInstance = null;
-    let placesService = null;
-    let activeInfoWindow = null;
-    let resultOverlaysArray = [];
-    let currentLocationMarker = null;
-    let currentUserCoordinates = null;
-
-    window.addEventListener('DOMContentLoaded', () => {
-        initializeKakaoMapSDK();
-    });
-
-    function initializeKakaoMapSDK() {
-        if (typeof kakao !== 'undefined' && kakao.maps) {
-            kakao.maps.load(() => {
-                setupMapAndServices();
-            });
-        } else {
-            showToast("카카오맵 SDK 로딩 실패. API 키 또는 도메인 설정을 확인하세요.");
-        }
-    }
-
-    function setupMapAndServices() {
-        const mapContainer = document.getElementById('kakaoMap');
-        const mapOptions = {
-            center: new kakao.maps.LatLng(37.566826, 126.9786567),
-            level: 5
-        };
-
-        mapInstance = new kakao.maps.Map(mapContainer, mapOptions);
-        placesService = new kakao.maps.services.Places();
-        
-        const zoomControl = new kakao.maps.ZoomControl();
-        mapInstance.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
-
-        const loaderOverlay = document.getElementById('mapLoader');
-        loaderOverlay.classList.add('opacity-0');
-        setTimeout(() => {
-            loaderOverlay.classList.add('hidden');
-        }, 500);
-
-        requestUserGeolocation();
-    }
-
-    function requestUserGeolocation() {
-        const badgeStatus = document.getElementById('locationBadgeStatus');
-        const badgeText = document.getElementById('locationBadgeText');
-
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
-                    
-                    currentUserCoordinates = new kakao.maps.LatLng(latitude, longitude);
-                    mapInstance.setCenter(currentUserCoordinates);
-                    
-                    drawCurrentLocationMarker(currentUserCoordinates);
-
-                    badgeStatus.classList.remove('bg-zinc-400');
-                    badgeStatus.classList.add('bg-emerald-500');
-                    badgeText.textContent = "내 위치 수집 완료";
-                },
-                (error) => {
-                    handleGeolocationError(error);
-                }
-            );
-        } else {
-            showToast("현재 브라우저는 위치 추적을 지원하지 않습니다.");
-            setDefaultFallbackLocation();
-        }
-    }
-
-    function drawCurrentLocationMarker(position) {
-        if (currentLocationMarker) {
-            currentLocationMarker.setMap(null);
-        }
-
-        const markerImageUrl = '[https://t1.daumcdn.net/localimg/localimages/07/2018/pc/img/marker_spot.png](https://t1.daumcdn.net/localimg/localimages/07/2018/pc/img/marker_spot.png)';
-        const markerImageSize = new kakao.maps.Size(24, 35);
-        const markerImage = new kakao.maps.MarkerImage(markerImageUrl, markerImageSize);
-
-        currentLocationMarker = new kakao.maps.Marker({
-            position: position,
-            image: markerImage,
-            map: mapInstance,
-            title: '나의 위치'
+        window.addEventListener('DOMContentLoaded', () => {
+            initializeKakaoMapSDK();
         });
 
-        const initialTooltip = new kakao.maps.InfoWindow({
-            content: '<div class="px-2.5 py-1 text-[10px] font-bold text-zinc-700">현재 내 위치</div>'
-        });
-        initialTooltip.open(mapInstance, currentLocationMarker);
-        
-        setTimeout(() => {
-            initialTooltip.close();
-        }, 2500);
-    }
+        function initializeKakaoMapSDK() {
+            if (typeof kakao !== 'undefined' && kakao.maps) {
+                kakao.maps.load(() => {
+                    setupMapAndServices();
+                });
+            } else {
+                showToast("카카오맵 SDK 로딩 실패. API 키 또는 도메인 설정을 확인하세요.");
+            }
+        }
 
-    function handleGeolocationError(error) {
-        let message = "위치 동의가 취소되어 기본 서울 중심 지도가 사용됩니다.";
-        showToast(message);
-        setDefaultFallbackLocation();
-    }
+        function setupMapAndServices() {
+            const mapContainer = document.getElementById('kakaoMap');
+            const mapOptions = {
+                center: new kakao.maps.LatLng(37.566826, 126.9786567),
+                level: 5
+            };
 
-    function setDefaultFallbackLocation() {
-        const defaultLocation = new kakao.maps.LatLng(37.566826, 126.9786567);
-        mapInstance.setCenter(defaultLocation);
-        
-        const badgeStatus = document.getElementById('locationBadgeStatus');
-        const badgeText = document.getElementById('locationBadgeText');
-        badgeStatus.classList.add('bg-zinc-300');
-        badgeText.textContent = "기본 위치 (서울)";
-    }
+            mapInstance = new kakao.maps.Map(mapContainer, mapOptions);
+            placesService = new kakao.maps.services.Places();
+            
+            const zoomControl = new kakao.maps.ZoomControl();
+            mapInstance.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
-    function moveToCurrentLocation() {
-        if (currentUserCoordinates) {
-            mapInstance.setCenter(currentUserCoordinates);
-            mapInstance.setLevel(5);
-            showToast("현재 내 위치 기준 지도로 복귀했습니다.");
-        } else {
+            const loaderOverlay = document.getElementById('mapLoader');
+            loaderOverlay.classList.add('opacity-0');
+            setTimeout(() => {
+                loaderOverlay.classList.add('hidden');
+            }, 500);
+
             requestUserGeolocation();
         }
-    }
 
-    function handleSearchSubmit(event) {
-        event.preventDefault(); 
-        const searchKeyword = document.getElementById('keywordInput').value.trim();
-        if (!searchKeyword) {
-            showToast("검색 키워드를 입력해 주세요.");
-            return;
-        }
-        executePlacesSearch(searchKeyword);
-    }
+        function requestUserGeolocation() {
+            const badgeStatus = document.getElementById('locationBadgeStatus');
+            const badgeText = document.getElementById('locationBadgeText');
 
-    function quickSearch(tag) {
-        document.getElementById('keywordInput').value = tag;
-        executePlacesSearch(tag);
-    }
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        
+                        currentUserCoordinates = new kakao.maps.LatLng(latitude, longitude);
+                        mapInstance.setCenter(currentUserCoordinates);
+                        
+                        drawCurrentLocationMarker(currentUserCoordinates);
 
-    function executePlacesSearch(keyword) {
-        const mapCenter = mapInstance.getCenter();
-        const searchOptions = {
-            location: mapCenter,
-            radius: 10000
-        };
-
-        placesService.keywordSearch(keyword, (data, status) => {
-            processSearchResults(data, status);
-        }, searchOptions);
-    }
-
-    function processSearchResults(placesData, status) {
-        const resultsContainer = document.getElementById('resultsContainer');
-        const placesListElement = document.getElementById('placesList');
-        const initialStateElement = document.getElementById('initialState');
-        const resultsFooterElement = document.getElementById('resultsFooter');
-
-        clearPreviousOverlays();
-        if (activeInfoWindow) {
-            activeInfoWindow.close();
+                        badgeStatus.classList.remove('bg-zinc-400');
+                        badgeStatus.classList.add('bg-emerald-500');
+                        badgeText.textContent = "내 위치 수집 완료";
+                    },
+                    (error) => {
+                        handleGeolocationError(error);
+                    }
+                );
+            } else {
+                showToast("현재 브라우저는 위치 추적을 지원하지 않습니다.");
+                setDefaultFallbackLocation();
+            }
         }
 
-        if (status === kakao.maps.services.Status.OK) {
-            initialStateElement.classList.add('hidden');
-            placesListElement.classList.remove('hidden');
-            resultsFooterElement.classList.remove('hidden');
-            
-            placesListElement.innerHTML = '';
-            const bounds = new kakao.maps.LatLngBounds();
+        function drawCurrentLocationMarker(position) {
+            if (currentLocationMarker) {
+                currentLocationMarker.setMap(null);
+            }
 
-            placesData.forEach((place, index) => {
-                const placePosition = new kakao.maps.LatLng(place.y, place.x);
-                bounds.extend(placePosition);
+            const markerImageUrl = 'https://t1.daumcdn.net/localimg/localimages/07/2018/pc/img/marker_spot.png';
+            const markerImageSize = new kakao.maps.Size(24, 35);
+            const markerImage = new kakao.maps.MarkerImage(markerImageUrl, markerImageSize);
 
-                const customOverlay = createHipCustomOverlay(placePosition, index, place);
-                resultOverlaysArray.push(customOverlay);
-
-                const listElement = buildPlaceListItem(place, index, placePosition, customOverlay);
-                placesListElement.appendChild(listElement);
+            currentLocationMarker = new kakao.maps.Marker({
+                position: position,
+                image: markerImage,
+                map: mapInstance,
+                title: '나의 위치'
             });
 
-            mapInstance.setBounds(bounds);
+            const initialTooltip = new kakao.maps.InfoWindow({
+                content: '<div class="px-2.5 py-1 text-[10px] font-bold text-zinc-700">현재 내 위치</div>'
+            });
+            initialTooltip.open(mapInstance, currentLocationMarker);
             
             setTimeout(() => {
-                if (mapInstance.getLevel() < 5) {
-                    mapInstance.setLevel(5);
-                }
-            }, 200);
+                initialTooltip.close();
+            }, 2500);
+        }
 
-        } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-            placesListElement.classList.add('hidden');
-            resultsFooterElement.classList.add('hidden');
-            initialStateElement.classList.remove('hidden');
-            initialStateElement.innerHTML = `
-                <div class="p-12 text-center text-zinc-400">
-                    <div class="w-12 h-12 rounded-full bg-zinc-50 flex items-center justify-center mx-auto mb-4">
-                        <i class="fa-solid fa-triangle-exclamation text-zinc-300 text-lg"></i>
+        function handleGeolocationError(error) {
+            showToast("위치 동의가 취소되어 기본 서울 중심 지도가 사용됩니다.");
+            setDefaultFallbackLocation();
+        }
+
+        function setDefaultFallbackLocation() {
+            const defaultLocation = new kakao.maps.LatLng(37.566826, 126.9786567);
+            mapInstance.setCenter(defaultLocation);
+            
+            const badgeStatus = document.getElementById('locationBadgeStatus');
+            const badgeText = document.getElementById('locationBadgeText');
+            badgeStatus.classList.add('bg-zinc-300');
+            badgeText.textContent = "기본 위치 (서울)";
+        }
+
+        function moveToCurrentLocation() {
+            if (currentUserCoordinates) {
+                mapInstance.setCenter(currentUserCoordinates);
+                mapInstance.setLevel(5);
+                showToast("현재 내 위치 기준 지도로 복귀했습니다.");
+            } else {
+                requestUserGeolocation();
+            }
+        }
+
+        function handleSearchSubmit(event) {
+            event.preventDefault(); 
+            const searchKeyword = document.getElementById('keywordInput').value.trim();
+            if (!searchKeyword) {
+                showToast("검색 키워드를 입력해 주세요.");
+                return;
+            }
+            executePlacesSearch(searchKeyword);
+        }
+
+        function quickSearch(tag) {
+            document.getElementById('keywordInput').value = tag;
+            executePlacesSearch(tag);
+        }
+
+        function executePlacesSearch(keyword) {
+            const mapCenter = mapInstance.getCenter();
+            const searchOptions = {
+                location: mapCenter,
+                radius: 10000
+            };
+
+            placesService.keywordSearch(keyword, (data, status) => {
+                processSearchResults(data, status);
+            }, searchOptions);
+        }
+
+        function processSearchResults(placesData, status) {
+            const resultsContainer = document.getElementById('resultsContainer');
+            const placesListElement = document.getElementById('placesList');
+            const initialStateElement = document.getElementById('initialState');
+            const fontFooter = document.getElementById('resultsFooter');
+
+            clearPreviousOverlays();
+            if (activeInfoWindow) {
+                activeInfoWindow.close();
+            }
+
+            if (status === kakao.maps.services.Status.OK) {
+                initialStateElement.classList.add('hidden');
+                placesListElement.classList.remove('hidden');
+                fontFooter.classList.remove('hidden');
+                
+                placesListElement.innerHTML = '';
+                const bounds = new kakao.maps.LatLngBounds();
+
+                placesData.forEach((place, index) => {
+                    const placePosition = new kakao.maps.LatLng(place.y, place.x);
+                    bounds.extend(placePosition);
+
+                    const customOverlay = createHipCustomOverlay(placePosition, index, place);
+                    resultOverlaysArray.push(customOverlay);
+
+                    const listElement = buildPlaceListItem(place, index, placePosition, customOverlay);
+                    placesListElement.appendChild(listElement);
+                });
+
+                mapInstance.setBounds(bounds);
+                
+                setTimeout(() => {
+                    if (mapInstance.getLevel() < 5) {
+                        mapInstance.setLevel(5);
+                    }
+                }, 200);
+
+            } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+                placesListElement.classList.add('hidden');
+                fontFooter.classList.add('hidden');
+                initialStateElement.classList.remove('hidden');
+                initialStateElement.innerHTML = `
+                    <div class="p-12 text-center text-zinc-400">
+                        <div class="w-12 h-12 rounded-full bg-zinc-50 flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-solid fa-triangle-exclamation text-zinc-300 text-lg"></i>
+                        </div>
+                        <p class="font-semibold text-zinc-700 text-sm">일치하는 장소가 없습니다</p>
+                        <p class="text-xs text-zinc-400 mt-1">철자가 맞는지 다시 확인해 주세요.</p>
                     </div>
-                    <p class="font-semibold text-zinc-700 text-sm">일치하는 장소가 없습니다</p>
-                    <p class="text-xs text-zinc-400 mt-1">철자가 맞는지 다시 확인해 주세요.</p>
+                `;
+                showToast("검색된 대상이 존재하지 않습니다.");
+            } else {
+                showToast("서버 시스템 오류가 발생했습니다.");
+            }
+        }
+
+        function createHipCustomOverlay(position, index, placeDetail) {
+            const overlayContainer = document.createElement('div');
+            overlayContainer.className = 'relative group cursor-pointer marker-float z-10';
+            
+            overlayContainer.innerHTML = `
+                <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-zinc-900/95 backdrop-blur-md text-white text-[10px] font-bold py-1.5 px-3 rounded-lg shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none z-50">
+                    ${placeDetail.place_name}
+                </div>
+                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-900 border-[3px] border-white shadow-[0_8px_20px_rgba(24,24,27,0.2)] transform hover:scale-115 hover:bg-amber-800 transition-all duration-200">
+                    <svg class="w-5 h-5 text-amber-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 8h1a4 4 0 1 1 0 8h-1"></path>
+                        <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"></path>
+                        <line x1="6" y1="2" x2="6" y2="4"></line>
+                        <line x1="10" y1="2" x2="10" y2="4"></line>
+                        <line x1="14" y1="2" x2="14" y2="4"></line>
+                    </svg>
+                </div>
+                <div class="w-2.5 h-2.5 bg-zinc-900 rotate-45 mx-auto -mt-1.5 border-r border-b border-white group-hover:bg-amber-800 transition-colors"></div>
+            `;
+
+            const customOverlay = new kakao.maps.CustomOverlay({
+                position: position,
+                content: overlayContainer,
+                yAnchor: 1.15
+            });
+
+            customOverlay.setMap(mapInstance);
+
+            overlayContainer.addEventListener('click', () => {
+                displayMarkerInfoWindow(customOverlay, placeDetail);
+            });
+
+            return customOverlay;
+        }
+
+        function displayMarkerInfoWindow(targetOverlay, placeInfo) {
+            if (activeInfoWindow) {
+                activeInfoWindow.close();
+            }
+
+            let phoneElement = '';
+            if (placeInfo.phone) {
+                phoneElement = `<div class="text-[11px] text-zinc-500 mt-1.5 font-medium"><i class="fa-solid fa-phone mr-1 text-zinc-300"></i>${placeInfo.phone}</div>`;
+            }
+
+            const htmlContent = `
+                <div class="custom-infowindow min-w-[240px]">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[9px] uppercase tracking-wider font-bold bg-zinc-100 text-zinc-600 px-2 py-0.5 rounded-md">
+                            ${placeInfo.category_group_name || 'Space'}
+                        </span>
+                    </div>
+                    <div class="font-bold text-zinc-900 text-sm mt-2 tracking-tight">${placeInfo.place_name}</div>
+                    <div class="text-[11px] text-zinc-400 mt-1 font-medium truncate">
+                        <i class="fa-solid fa-map-pin mr-1 text-zinc-300"></i>${placeInfo.road_address_name || placeInfo.address_name}
+                    </div>
+                    ${phoneElement}
+                    <div class="mt-4 pt-3 border-t border-zinc-100 flex justify-end">
+                        <a href="https://map.kakao.com/link/map/${placeInfo.id}" target="_blank" class="inline-flex items-center gap-1.5 bg-zinc-900 hover:bg-zinc-800 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold tracking-tight transition-all shadow-sm">
+                            길찾기 링크 <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+                        </a>
+                    </div>
                 </div>
             `;
-            showToast("검색된 대상이 존재하지 않습니다.");
-        } else {
-            showToast("서버 시스템 오류가 발생했습니다.");
-        }
-    }
 
-    function createHipCustomOverlay(position, index, placeDetail) {
-        const overlayContainer = document.createElement('div');
-        overlayContainer.className = 'relative group cursor-pointer marker-float z-10';
-        
-        overlayContainer.innerHTML = `
-            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-zinc-900/95 backdrop-blur-md text-white text-[10px] font-bold py-1.5 px-3 rounded-lg shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none z-50">
-                ${placeDetail.place_name}
-            </div>
-            <div class="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-900 border-[3px] border-white shadow-[0_8px_20px_rgba(24,24,27,0.2)] transform hover:scale-115 hover:bg-amber-800 transition-all duration-200">
-                <svg class="w-5 h-5 text-amber-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17 8h1a4 4 0 1 1 0 8h-1"></path>
-                    <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"></path>
-                    <line x1="6" y1="2" x2="6" y2="4"></line>
-                    <line x1="10" y1="2" x2="10" y2="4"></line>
-                    <line x1="14" y1="2" x2="14" y2="4"></line>
-                </svg>
-            </div>
-            <div class="w-2.5 h-2.5 bg-zinc-900 rotate-45 mx-auto -mt-1.5 border-r border-b border-white group-hover:bg-amber-800 transition-colors"></div>
-        `;
+            const infoWindowInstance = new kakao.maps.InfoWindow({
+                content: htmlContent,
+                removable: true
+            });
 
-        const customOverlay = new kakao.maps.CustomOverlay({
-            position: position,
-            content: overlayContainer,
-            yAnchor: 1.15
-        });
+            infoWindowInstance.open(mapInstance, targetOverlay);
+            activeInfoWindow = infoWindowInstance;
 
-        customOverlay.setMap(mapInstance);
-
-        overlayContainer.addEventListener('click', () => {
-            displayMarkerInfoWindow(customOverlay, placeDetail);
-        });
-
-        return customOverlay;
-    }
-
-    function displayMarkerInfoWindow(targetOverlay, placeInfo) {
-        if (activeInfoWindow) {
-            activeInfoWindow.close();
+            mapInstance.panTo(targetOverlay.getPosition());
         }
 
-        const htmlContent = `
-            <div class="custom-infowindow min-w-[240px]">
-                <div class="flex items-center justify-between">
-                    <span class="text-[9px] uppercase tracking-wider font-bold bg-zinc-100 text-zinc-600 px-2 py-0.5 rounded-md">
-                        ${placeInfo.category_group_name || 'Space'}
-                    </span>
+        function buildPlaceListItem(place, index, position, associatedOverlay) {
+            const listItem = document.createElement('li');
+            listItem.className = 'p-5 hover:bg-zinc-50 cursor-pointer transition-all duration-150 flex items-start gap-4 border-l-4 border-transparent hover:border-zinc-900';
+
+            const formattedIndex = String(index + 1).padStart(2, '0');
+            
+            let phoneHtml = '';
+            if (place.phone) {
+                phoneHtml = `<p class="text-[11px] text-zinc-400 mt-1.5 flex items-center gap-1 font-medium"><i class="fa-solid fa-phone text-[9px] text-zinc-300"></i> ${place.phone}</p>`;
+            }
+
+            listItem.innerHTML = `
+                <span class="flex-shrink-0 w-6 h-6 bg-zinc-100 text-zinc-700 rounded-lg flex items-center justify-center text-xs font-bold tracking-wide">
+                    ${formattedIndex}
+                </span>
+                <div class="flex-1 min-w-0">
+                    <h3 class="text-sm font-bold text-zinc-900 tracking-tight truncate">${place.place_name}</h3>
+                    <p class="text-xs text-zinc-400 mt-1 font-medium truncate">${place.road_address_name || place.address_name}</p>
+                    ${phoneHtml}
                 </div>
-                <div class="font-bold text-zinc-900 text-sm mt-2 tracking-tight">${placeInfo.place_name}</div>
-                <div class="text-[11px] text-zinc-400 mt-1 font-medium truncate">
-                    <i class="fa-solid fa-map-pin mr-1 text-zinc-300"></i>${placeInfo.road_address_name || placeInfo.address_name}
-                </div>
-                \${placeInfo.phone ? `<div class="text-[11px] text-zinc-500 mt-1.5 font-medium"><i class="fa-solid fa-phone mr-1 text-zinc-300"></i>\${placeInfo.phone}</div>` : ''}
-                <div class="mt-4 pt-3 border-t border-zinc-100 flex justify-end">
-                    <a href="[https://map.kakao.com/link/map/](https://map.kakao.com/link/map/)\${placeInfo.id}" target="_blank" class="inline-flex items-center gap-1.5 bg-zinc-900 hover:bg-zinc-800 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold tracking-tight transition-all shadow-sm">
-                        길찾기 링크 <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
-                    </a>
-                </div>
-            </div>
-        `;
+            `;
 
-        const infoWindowInstance = new kakao.maps.InfoWindow({
-            content: htmlContent,
-            removable: true
-        });
+            listItem.addEventListener('click', () => {
+                mapInstance.setLevel(5);
+                mapInstance.panTo(position);
+                displayMarkerInfoWindow(associatedOverlay, place);
+            });
 
-        infoWindowInstance.open(mapInstance, targetOverlay);
-        activeInfoWindow = infoWindowInstance;
+            return listItem;
+        }
 
-        mapInstance.panTo(targetOverlay.getPosition());
-    }
+        function clearPreviousOverlays() {
+            resultOverlaysArray.forEach(overlay => {
+                overlay.setMap(null);
+            });
+            resultOverlaysArray = [];
+        }
 
-    function buildPlaceListItem(place, index, position, associatedOverlay) {
-        const listItem = document.createElement('li');
-        listItem.className = 'p-5 hover:bg-zinc-50 cursor-pointer transition-all duration-150 flex items-start gap-4 border-l-4 border-transparent hover:border-zinc-900';
+        function showToast(message) {
+            const toastElement = document.getElementById('toastNotification');
+            const toastMessageElement = document.getElementById('toastMessage');
 
-        const indexBadgeHtml = `
-            <span class="flex-shrink-0 w-6 h-6 bg-zinc-100 text-zinc-700 rounded-lg flex items-center justify-center text-xs font-bold tracking-wide">
-                \${String(index + 1).padStart(2, '0')}
-            </span>
-        `;
+            toastMessageElement.textContent = message;
+            toastElement.classList.remove('translate-y-20', 'opacity-0');
+            toastElement.classList.add('translate-y-0', 'opacity-100');
 
-        const bodyHtml = `
-            <div class="flex-1 min-w-0">
-                <h3 class="text-sm font-bold text-zinc-900 tracking-tight truncate">\${place.place_name}</h3>
-                <p class="text-xs text-zinc-400 mt-1 font-medium truncate">\${place.road_address_name || place.address_name}</p>
-                \${place.phone ? `
-                    <p class="text-[11px] text-zinc-400 mt-1.5 flex items-center gap-1 font-medium">
-                        <i class="fa-solid fa-phone text-[9px] text-zinc-300"></i> \${place.phone}
-                    </p>
-                ` : ''}
-            </div>
-        `;
-
-        listItem.innerHTML = indexBadgeHtml + bodyHtml;
-
-        listItem.addEventListener('click', () => {
-            mapInstance.setLevel(5);
-            mapInstance.panTo(position);
-            displayMarkerInfoWindow(associatedOverlay, place);
-        });
-
-        return listItem;
-    }
-
-    function clearPreviousOverlays() {
-        resultOverlaysArray.forEach(overlay => {
-            overlay.setMap(null);
-        });
-        resultOverlaysArray = [];
-    }
-
-    function showToast(message) {
-        const toastElement = document.getElementById('toastNotification');
-        const toastMessageElement = document.getElementById('toastMessage');
-
-        toastMessageElement.textContent = message;
-        toastElement.classList.remove('translate-y-20', 'opacity-0');
-        toastElement.classList.add('translate-y-0', 'opacity-100');
-
-        setTimeout(() => {
-            toastElement.classList.remove('translate-y-0', 'opacity-100');
-            toastElement.classList.add('translate-y-20', 'opacity-0');
-        }, 3000);
-    }
-</script>
+            setTimeout(() => {
+                toastElement.classList.remove('translate-y-0', 'opacity-100');
+                toastElement.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
