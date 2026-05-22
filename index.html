@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ARCHIVE.CAFE | 감성 카페 아카이브</title>
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- 프리미엄 본문 폰트 Pretendard & Inter -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Font Awesome 아이콘 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -37,8 +40,10 @@
             backdrop-filter: blur(8px);
         }
 
+        /* 스크롤바 미니멀 스타일링 */
         ::-webkit-scrollbar {
             width: 5px;
+            height: 5px;
         }
         ::-webkit-scrollbar-track {
             background: transparent;
@@ -52,10 +57,12 @@
         }
     </style>
 
+    <!-- 카카오 맵 라이브러리 로드 -->
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=a600ea145349b868d24791c87be1fc4f&libraries=services&autoload=false"></script>
 </head>
 <body class="bg-[#F9F9FB] h-screen overflow-hidden flex flex-col antialiased text-zinc-800">
 
+    <!-- 상단 헤더 -->
     <header class="bg-white border-b border-zinc-100 px-6 py-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex items-center justify-between z-20 shrink-0">
         <div class="flex items-center space-x-3">
             <div class="w-8 h-8 rounded-lg bg-zinc-900 flex items-center justify-center">
@@ -71,15 +78,18 @@
         </div>
     </header>
 
+    <!-- 메인 레이아웃 -->
     <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
         
+        <!-- 좌측 사이드바 -->
         <aside class="w-full md:w-[380px] bg-white z-10 flex flex-col border-r border-zinc-100 shrink-0">
             
+            <!-- 검색 및 필터 -->
             <div class="p-6 border-b border-zinc-100 bg-[#FCFCFD]">
                 <form id="searchForm" onsubmit="handleSearchSubmit(event)" class="space-y-4">
                     <div class="space-y-1">
-                        <label for="keywordInput" class="block text-xs font-bold uppercase tracking-wider text-zinc-400">Search Space</label>
-                        <p class="text-xs text-zinc-500">방문하고 싶은 공간이나 지역을 검색하세요.</p>
+                        <label for="keywordInput" class="block text-xs font-bold uppercase tracking-wider text-zinc-400 font-bold">Search Location & Space</label>
+                        <p class="text-xs text-zinc-500">지역명(예: 성수동, 망원역)을 치면 주변 카페를 똑똑하게 모아 드려요.</p>
                     </div>
                     <div class="relative rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -87,7 +97,7 @@
                         </div>
                         <input type="text" id="keywordInput" 
                                class="focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 block w-full pl-10 pr-24 text-sm border-zinc-200 rounded-xl p-3.5 border outline-none transition-all placeholder-zinc-400 font-medium" 
-                               placeholder="예: 한남동 필터커피, 성수동">
+                               placeholder="예: 성수동, 한남동, 디저트 페어링">
                         <button type="submit" 
                                 class="absolute inset-y-2 right-2 px-4 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-semibold rounded-lg transition-all duration-200">
                             검색
@@ -95,22 +105,29 @@
                     </div>
                 </form>
                 
+                <!-- 큐레이션 태그 (가로 스크롤로 더 매끄럽고 많은 태그 제공) -->
                 <div class="mt-5">
                     <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-2.5">Curation Tags</p>
-                    <div class="flex flex-wrap gap-1.5">
-                        <button onclick="quickSearch('에스프레소 바')" class="px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">☕ 에스프레소 바</button>
-                        <button onclick="quickSearch('필터커피')" class="px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">🧪 필터커피</button>
-                        <button onclick="quickSearch('디저트 페어링')" class="px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">🍰 디저트</button>
-                        <button onclick="quickSearch('테라스')" class="px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">🌿 테라스</button>
+                    <div class="flex gap-1.5 overflow-x-auto pb-2 scrollbar-none snap-x">
+                        <button onclick="quickSearch('에스프레소 바')" class="snap-start shrink-0 px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">☕ 에스프레소 바</button>
+                        <button onclick="quickSearch('필터커피')" class="snap-start shrink-0 px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">🧪 필터커피</button>
+                        <button onclick="quickSearch('디저트 페어링')" class="snap-start shrink-0 px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">🍰 디저트</button>
+                        <button onclick="quickSearch('테라스')" class="snap-start shrink-0 px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">🌿 테라스</button>
+                        <button onclick="quickSearch('북카페')" class="snap-start shrink-0 px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">📚 북카페</button>
+                        <button onclick="quickSearch('베이커리 카페')" class="snap-start shrink-0 px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">🥐 대형베이커리</button>
+                        <button onclick="quickSearch('작업하기 좋은 카페')" class="snap-start shrink-0 px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">💻 작업하기 좋은</button>
+                        <button onclick="quickSearch('애견동반 카페')" class="snap-start shrink-0 px-3 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 rounded-lg text-xs font-medium border border-zinc-200/60 transition-colors">🐶 반려동물 동반</button>
                     </div>
                 </div>
 
+                <!-- 현재 위치 탐색 -->
                 <button onclick="moveToCurrentLocation()" class="mt-4 w-full flex items-center justify-center gap-2 bg-white hover:bg-zinc-50 text-zinc-800 border border-zinc-200 rounded-xl py-3 text-xs font-bold transition-all shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
                     <i class="fa-solid fa-location-arrow text-xs text-zinc-600"></i>
-                    주변 공간 자동 탐색하기
+                    내 주변 탐색하기 (GPS)
                 </button>
             </div>
 
+            <!-- 결과 컨테이너 -->
             <div class="flex-1 overflow-y-auto" id="resultsContainer">
                 <div id="initialState" class="p-12 text-center text-zinc-500 my-auto">
                     <div class="w-12 h-12 rounded-full bg-zinc-50 flex items-center justify-center mx-auto mb-4">
@@ -128,15 +145,18 @@
             </div>
         </aside>
 
+        <!-- 우측 지도 영역 -->
         <main class="flex-1 relative">
             <div id="kakaoMap" class="w-full h-full"></div>
             
+            <!-- 로딩 화면 -->
             <div id="mapLoader" class="absolute inset-0 bg-white flex flex-col items-center justify-center z-30 transition-opacity duration-500">
                 <div class="w-10 h-10 border-2 border-zinc-200 border-t-zinc-800 rounded-full animate-spin mb-4"></div>
                 <p class="text-zinc-800 font-semibold text-sm">지도를 불러오고 있습니다</p>
                 <p class="text-xs text-zinc-400 mt-1">로케이션 데이터 로드 중...</p>
             </div>
 
+            <!-- 상태 표시 뱃지 -->
             <div class="absolute top-4 right-4 bg-white/95 backdrop-blur shadow-md rounded-full px-4 py-2.5 z-10 text-xs font-semibold text-zinc-700 border border-zinc-200/80 flex items-center gap-2">
                 <span id="locationBadgeStatus" class="h-2 w-2 rounded-full bg-zinc-400"></span>
                 <span id="locationBadgeText" class="text-[11px] tracking-tight">위치 파악 대기 중</span>
@@ -144,14 +164,17 @@
         </main>
     </div>
 
+    <!-- 토스트 알림 -->
     <div id="toastNotification" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 bg-zinc-900 text-white px-5 py-3 rounded-xl shadow-xl z-50 flex items-center space-x-2.5 transition-all duration-300">
         <i class="fa-solid fa-bell text-xs text-zinc-400"></i>
         <span id="toastMessage" class="text-xs font-semibold">알림 메시지</span>
     </div>
 
+    <!-- 스크립트 영역 -->
     <script>
         let mapInstance = null;
         let placesService = null;
+        let geocoderService = null;         // 주소 검색(좌표계산) 라이브러리 추가
         let activeInfoWindow = null;
         let resultOverlaysArray = [];
         let currentLocationMarker = null;
@@ -180,6 +203,7 @@
 
             mapInstance = new kakao.maps.Map(mapContainer, mapOptions);
             placesService = new kakao.maps.services.Places();
+            geocoderService = new kakao.maps.services.Geocoder(); // 주소 좌표 변환 서비스 객체 할당
             
             const zoomControl = new kakao.maps.ZoomControl();
             mapInstance.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
@@ -273,6 +297,7 @@
             }
         }
 
+        // 검색 처리 로직 고도화 (지역명 분기 검색)
         function handleSearchSubmit(event) {
             event.preventDefault(); 
             const searchKeyword = document.getElementById('keywordInput').value.trim();
@@ -280,19 +305,39 @@
                 showToast("검색 키워드를 입력해 주세요.");
                 return;
             }
-            executePlacesSearch(searchKeyword);
+            analyzeAndSearch(searchKeyword);
         }
 
         function quickSearch(tag) {
             document.getElementById('keywordInput').value = tag;
-            executePlacesSearch(tag);
+            executePlacesSearch(tag, mapInstance.getCenter());
         }
 
-        function executePlacesSearch(keyword) {
-            const mapCenter = mapInstance.getCenter();
+        // 사용자가 입력한 단어가 지역명인지 일반 검색어인지 분석하고 스마트 처리
+        function analyzeAndSearch(keyword) {
+            // 카카오 Geocoder를 이용하여 입력된 검색어가 주소(지역명)로 변환 가능한지 판단합니다.
+            geocoderService.addressSearch(keyword, function(result, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                    // 주소로 변환 성공 시: 지도를 해당 주소지 중심지로 순식간에 이동한 후 카페들을 자동 조회
+                    const addressCoords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                    mapInstance.setCenter(addressCoords);
+                    mapInstance.setLevel(5);
+                    
+                    showToast(`'${keyword}'(으)로 지도를 이동하여 주변 카페를 정렬합니다.`);
+                    
+                    // 해당 좌표 근처의 '카페' 카테고리만 쏙 골라 검색 수행
+                    executePlacesSearch('카페', addressCoords);
+                } else {
+                    // 주소 변환이 실패할 시에는 일반 키워드 장소 검색으로 즉시 전환합니다.
+                    executePlacesSearch(keyword, mapInstance.getCenter());
+                }
+            });
+        }
+
+        function executePlacesSearch(keyword, searchBaseCoords) {
             const searchOptions = {
-                location: mapCenter,
-                radius: 10000
+                location: searchBaseCoords,
+                radius: 10000 // 10km 반경 최적 서칭
             };
 
             placesService.keywordSearch(keyword, (data, status) => {
