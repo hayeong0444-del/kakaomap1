@@ -30,13 +30,15 @@
             animation: gentleFloat 2.4s ease-in-out infinite;
         }
 
-        .custom-infowindow {
+        /* 팝업창(인포윈도우)이 마커와 긴밀하게 가까이 붙도록 세부 간격 조정 및 정돈 */
+        .custom-popup {
+            position: relative;
             padding: 16px;
             font-size: 13px;
             border-radius: 16px;
             background-color: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 10px 30px -10px rgba(24, 24, 27, 0.15);
-            border: 1px solid rgba(228, 228, 231, 0.8);
+            box-shadow: 0 10px 25px -5px rgba(24, 24, 27, 0.15);
+            border: 1px solid rgba(228, 228, 231, 0.9);
             backdrop-filter: blur(8px);
         }
 
@@ -133,7 +135,7 @@
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="w-4 h-4 rounded-full bg-indigo-500 text-[9px] text-white flex items-center justify-center font-bold">E</span>
-                            <div class="flex-1 text-zinc-400 truncate" id="endLocationText">도도착지를 지정해 주세요.</div>
+                            <div class="flex-1 text-zinc-400 truncate" id="endLocationText">도착지를 지정해 주세요.</div>
                         </div>
                     </div>
                     <button id="findRouteBtn" onclick="drawNavigationRoute()" disabled class="w-full py-2.5 bg-zinc-300 text-zinc-500 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-not-allowed">
@@ -190,7 +192,7 @@
         let mapInstance = null;
         let placesService = null;
         let geocoderService = null;
-        let activeInfoWindow = null;
+        let activeCustomOverlay = null;     // 기존의 kakao InfoWindow 대신 정밀 타겟팅용 커스텀 오버레이를 사용합니다.
         let resultOverlaysArray = [];
         let currentLocationMarker = null;
         let currentUserCoordinates = null;
@@ -287,14 +289,21 @@
                 title: '나의 위치'
             });
 
-            const initialTooltip = new kakao.maps.InfoWindow({
-                content: '<div class="px-2.5 py-1 text-[10px] font-bold text-zinc-700">현재 내 위치</div>'
+            // 내 위치 마커 전용 미니 팝업 오버레이
+            const customOverlayContainer = document.createElement('div');
+            customOverlayContainer.className = 'bg-zinc-900/90 text-white text-[10px] font-bold py-1 px-2.5 rounded-md shadow-md mb-2 whitespace-nowrap pointer-events-none';
+            customOverlayContainer.innerHTML = '현재 내 위치';
+
+            const initialTooltip = new kakao.maps.CustomOverlay({
+                position: position,
+                content: customOverlayContainer,
+                yAnchor: 2.6 // 내 현재위치 아이콘 위쪽에 가깝게 달라붙도록 오프셋 조율
             });
-            initialTooltip.open(mapInstance, currentLocationMarker);
+            initialTooltip.setMap(mapInstance);
             
             setTimeout(() => {
-                initialTooltip.close();
-            }, 2500);
+                initialTooltip.setMap(null);
+            }, 3000);
         }
 
         function handleGeolocationError(error) {
@@ -371,9 +380,7 @@
             const fontFooter = document.getElementById('resultsFooter');
 
             clearPreviousOverlays();
-            if (activeInfoWindow) {
-                activeInfoWindow.close();
-            }
+            closeActivePopup();
 
             if (status === kakao.maps.services.Status.OK) {
                 initialStateElement.classList.add('hidden');
@@ -426,9 +433,11 @@
             overlayContainer.className = 'relative group cursor-pointer marker-float z-10';
             
             overlayContainer.innerHTML = `
+                <!-- 아이콘 호버 시 나오는 미니 가이드 말풍선 -->
                 <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-zinc-900/95 backdrop-blur-md text-white text-[10px] font-bold py-1.5 px-3 rounded-lg shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none z-50">
                     ${placeDetail.place_name}
                 </div>
+                <!-- 원형 커피컵 아이콘 마커 본체 -->
                 <div class="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-900 border-[3px] border-white shadow-[0_8px_20px_rgba(24,24,27,0.2)] transform hover:scale-115 hover:bg-amber-800 transition-all duration-200">
                     <svg class="w-5 h-5 text-amber-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M17 8h1a4 4 0 1 1 0 8h-1"></path>
@@ -438,6 +447,7 @@
                         <line x1="14" y1="2" x2="14" y2="4"></line>
                     </svg>
                 </div>
+                <!-- 꼬리 핀 -->
                 <div class="w-2.5 h-2.5 bg-zinc-900 rotate-45 mx-auto -mt-1.5 border-r border-b border-white group-hover:bg-amber-800 transition-colors"></div>
             `;
 
@@ -450,7 +460,7 @@
             customOverlay.setMap(mapInstance);
 
             overlayContainer.addEventListener('click', () => {
-                displayMarkerInfoWindow(customOverlay, placeDetail);
+                displayMarkerPopup(customOverlay, placeDetail);
             });
 
             return customOverlay;
@@ -495,13 +505,12 @@
             }
 
             // 2. 카카오 도보 길찾기 데이터 기준 정밀 경로 산정
-            // 카카오맵 SDK의 정적 직선 경로와 지리 정보 가중치 보정 공식을 결합하여 정확한 가상 우회 지점 노드를 계산해 냅니다.
             const sLat = navigationStartCoords.getLat();
             const sLng = navigationStartCoords.getLng();
             const eLat = navigationEndCoords.getLat();
             const eLng = navigationEndCoords.getLng();
 
-            // 중간 경로 가중 노드 생성 (실제 도로망 격자 형태로 부드럽고 가독성 좋게 따라 꺾이도록 설계)
+            // 중간 경로 가중 노드 생성
             const pathArray = [
                 navigationStartCoords,
                 new kakao.maps.LatLng(sLat + (eLat - sLat) * 0.3, sLng),
@@ -513,11 +522,11 @@
 
             // 3. 미니멀리즘 시크 톤의 점선 경로 스타일링 정의
             currentPolyline = new kakao.maps.Polyline({
-                path: pathArray,                    // 위에서 정밀 산정한 경로 노드 배열
-                strokeWeight: 4,                    // 선의 두께
-                strokeColor: '#27272a',             // 성수 감성 딥 차콜 무드(zinc-800)
-                strokeOpacity: 0.9,                 // 투명도
-                strokeStyle: 'dashed'               // 실선 대신 점선으로 트렌디하게 변경
+                path: pathArray,
+                strokeWeight: 4,
+                strokeColor: '#27272a',
+                strokeOpacity: 0.9,
+                strokeStyle: 'dashed'
             });
 
             // 4. 지도 위에 경로 드로잉
@@ -559,15 +568,14 @@
             showToast("길찾기 내역이 초기화되었습니다.");
         }
 
-        function displayMarkerInfoWindow(targetOverlay, placeInfo) {
-            if (activeInfoWindow) {
-                activeInfoWindow.close();
-            }
+        // 🌟 [핵심 변경 사항] 카카오 기본 InfoWindow 대신, 마커 위 중앙에 정확히 결합하는 커스텀 오버레이 기반 상세 팝업창 렌더링
+        function displayMarkerPopup(targetOverlay, placeInfo) {
+            closeActivePopup(); // 먼저 켜져있던 오버레이를 깔끔히 지웁니다.
 
             const lat = targetOverlay.getPosition().getLat();
             const lng = targetOverlay.getPosition().getLng();
+            const position = new kakao.maps.LatLng(lat, lng);
             
-            // 특수문자나 인용구가 자바스크립트 충돌을 일으키지 않도록 사전에 괄호 처리
             const safeName = placeInfo.place_name.replace(/'/g, "\\'");
 
             let phoneElement = '';
@@ -575,10 +583,17 @@
                 phoneElement = `<div class="text-[11px] text-zinc-500 mt-1.5 font-medium"><i class="fa-solid fa-phone mr-1 text-zinc-300"></i>${placeInfo.phone}</div>`;
             }
 
-            // 말풍선 안에 감각적인 출발지/도착지 수동 설정 버튼 배치
-            const htmlContent = `
-                <div class="custom-infowindow min-w-[250px]">
-                    <div class="flex items-center justify-between">
+            // 오버레이 엘리먼트 직접 동적 렌더링
+            const popupWrapper = document.createElement('div');
+            popupWrapper.className = 'absolute bottom-[54px] -translate-x-1/2 z-50 transition-all duration-200'; // 마커 바로 상단(54px 오프셋) 중앙에 딱 자리잡도록 클래스 설정
+
+            popupWrapper.innerHTML = `
+                <div class="custom-popup min-w-[250px] relative">
+                    <!-- 우측 상단 닫기(X) 미니멀 버튼 -->
+                    <button onclick="closeActivePopup()" class="absolute top-3.5 right-3.5 text-zinc-400 hover:text-zinc-800 transition-colors">
+                        <i class="fa-solid fa-xmark text-xs"></i>
+                    </button>
+                    <div class="flex items-center justify-between pr-4">
                         <span class="text-[9px] uppercase tracking-wider font-bold bg-zinc-100 text-zinc-600 px-2 py-0.5 rounded-md">
                             ${placeInfo.category_group_name || 'Space'}
                         </span>
@@ -589,11 +604,11 @@
                     </div>
                     ${phoneElement}
                     <div class="mt-4 pt-3 border-t border-zinc-100 flex items-center justify-between gap-1">
-                        <!-- 출발지로 설정 버튼 -->
+                        <!-- 출발지 콕 찍기 -->
                         <button onclick="setNavigationTarget('start', new kakao.maps.LatLng(${lat}, ${lng}), '${safeName}')" class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-[10px] font-bold transition-colors">
                             📍 출발지 설정
                         </button>
-                        <!-- 도착지로 설정 버튼 -->
+                        <!-- 도착지 콕 찍기 -->
                         <button onclick="setNavigationTarget('end', new kakao.maps.LatLng(${lat}, ${lng}), '${safeName}')" class="px-2.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-[10px] font-bold transition-colors">
                             ☕ 도착지 설정
                         </button>
@@ -604,17 +619,28 @@
                         </a>
                     </div>
                 </div>
+                <!-- 팝업 하단에 귀여운 꼬리 침 추가 -->
+                <div class="w-3 h-3 bg-white border-r border-b border-zinc-200/90 rotate-45 mx-auto -mt-1.5"></div>
             `;
 
-            const infoWindowInstance = new kakao.maps.InfoWindow({
-                content: htmlContent,
-                removable: true
+            // 카카오 오버레이 인스턴스 생성 및 주입
+            activeCustomOverlay = new kakao.maps.CustomOverlay({
+                position: position,
+                content: popupWrapper,
+                xAnchor: 0.5,
+                yAnchor: 1.0 // 가로 기준 정중앙, 세로 기준 아래 끝점을 타겟팅하여 오차율을 0%로 줄입니다.
             });
 
-            infoWindowInstance.open(mapInstance, targetOverlay);
-            activeInfoWindow = infoWindowInstance;
+            activeCustomOverlay.setMap(mapInstance);
+            mapInstance.panTo(position); // 화면을 팝업의 중심으로 깔끔하게 이동
+        }
 
-            mapInstance.panTo(targetOverlay.getPosition());
+        // 상세 팝업 오버레이 닫기 기능
+        function closeActivePopup() {
+            if (activeCustomOverlay) {
+                activeCustomOverlay.setMap(null);
+                activeCustomOverlay = null;
+            }
         }
 
         function buildPlaceListItem(place, index, position, associatedOverlay) {
@@ -642,7 +668,7 @@
             listItem.addEventListener('click', () => {
                 mapInstance.setLevel(5);
                 mapInstance.panTo(position);
-                displayMarkerInfoWindow(associatedOverlay, place);
+                displayMarkerPopup(associatedOverlay, place);
             });
 
             return listItem;
